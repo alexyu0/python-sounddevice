@@ -727,8 +727,6 @@ class _StreamBase(object):
 
             @ffi_callback
             def callback_ptr(iptr, optr, frames, time, status, _):
-                print "here"
-		time_module.sleep(0.01)
 		data = _array(
                     _buffer(optr, frames, self._channels, self._samplesize),
                     self._channels, self._dtype)
@@ -2507,6 +2505,7 @@ def _wrap_callback(callback, *args):
     """Invoke callback function and check for custom exceptions."""
     args = args[:-1] + (CallbackFlags(args[-1]),)
     try:
+	time_module.sleep(0.005)
         callback(*args)
     except CallbackStop:
         return _lib.paComplete
