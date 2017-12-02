@@ -632,7 +632,7 @@ def get_portaudio_version():
 class _StreamBase(object):
     """Direct or indirect base class for all stream classes."""
 
-    def __init__(self, kind, samplerate=None, blocksize=None, device=None,
+    def __init__(self, kind, callback_sleep, samplerate=None, blocksize=None, device=None,
                  channels=None, dtype=None, latency=None, extra_settings=None,
                  callback=None, finished_callback=None, clip_off=None,
                  dither_off=None, never_drop_input=None,
@@ -730,7 +730,7 @@ class _StreamBase(object):
 		data = _array(
                     _buffer(optr, frames, self._channels, self._samplesize),
                     self._channels, self._dtype)
-                return _wrap_callback(callback, data, frames, time, status)
+                return _wrap_callback(callback, sleepTime, data, frames, time, status)
 
         elif kind == 'duplex' and wrap_callback == 'buffer':
 
@@ -1336,7 +1336,8 @@ class OutputStream(RawOutputStream):
                  device=None, channels=None, dtype=None, latency=None,
                  extra_settings=None, callback=None, finished_callback=None,
                  clip_off=None, dither_off=None, never_drop_input=None,
-                 prime_output_buffers_using_stream_callback=None):
+                 prime_output_buffers_using_stream_callback=None,
+		 callback_sleep=0):
         """Open an output stream.
 
         This has the same methods and attributes as `Stream`, except
@@ -1363,6 +1364,7 @@ class OutputStream(RawOutputStream):
 
         """
         _StreamBase.__init__(self, kind='output', wrap_callback='array',
+				callback_sleep=callback_sleep
                              **_remove_self(locals()))
 
     def write(self, data):
@@ -2505,7 +2507,7 @@ def _wrap_callback(callback, *args):
     """Invoke callback function and check for custom exceptions."""
     args = args[:-1] + (CallbackFlags(args[-1]),)
     try:
-	time_module.sleep(0.005)
+	time_module.sleep(args[0])
         callback(*args)
     except CallbackStop:
         return _lib.paComplete
