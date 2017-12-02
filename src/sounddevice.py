@@ -1364,7 +1364,7 @@ class OutputStream(RawOutputStream):
 
         """
         _StreamBase.__init__(self, kind='output', wrap_callback='array',
-				callback_sleep=callback_sleep
+				callback_sleep=callback_sleep,
                              **_remove_self(locals()))
 
     def write(self, data):
