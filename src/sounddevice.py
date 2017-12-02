@@ -56,7 +56,7 @@ import platform as _platform
 import sys as _sys
 from ctypes.util import find_library as _find_library
 from _sounddevice import ffi as _ffi
-
+import time
 
 try:
     _libname = _find_library('portaudio')
@@ -727,7 +727,8 @@ class _StreamBase(object):
 
             @ffi_callback
             def callback_ptr(iptr, optr, frames, time, status, _):
-                data = _array(
+                time.sleep(0.001)
+		data = _array(
                     _buffer(optr, frames, self._channels, self._samplesize),
                     self._channels, self._dtype)
                 return _wrap_callback(callback, data, frames, time, status)
