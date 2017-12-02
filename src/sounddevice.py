@@ -728,7 +728,7 @@ class _StreamBase(object):
             @ffi_callback
             def callback_ptr(iptr, optr, frames, time, status, _):
                 print "here"
-		time_module.sleep(0.001)
+		time_module.sleep(0.01)
 		data = _array(
                     _buffer(optr, frames, self._channels, self._samplesize),
                     self._channels, self._dtype)
