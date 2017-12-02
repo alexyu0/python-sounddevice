@@ -68,7 +68,7 @@ else:
     cmdclass = {'bdist_wheel': bdist_wheel_half_pure}
 
 setup(
-    name='sounddevice',
+    name='local_sounddevice',
     version=__version__,
     package_dir=package_dir,
     py_modules=['sounddevice'],
